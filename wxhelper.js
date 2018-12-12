@@ -8,6 +8,9 @@ class BaseService {
     this.app = null
   }
 
+  setStorageSync (key, value) {
+    wx.setStorageSync(key, value)
+  }
 
   reLaunch (baseUrl, params) {
     return new Promise((res, rej) => {
