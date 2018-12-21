@@ -55,13 +55,17 @@ class BasePage {
     let actionsObject = {}
     !!actionsObject && Object.keys(viewAction).forEach(function (key) {
       let action = viewAction[key]
-      actionsObject[key] = function (e) {
-  
-        let detail = {}
-        if (e.detail) {
-          detail = e.detail.hasOwnProperty('value') ? e.detail.value : e.detail
+      actionsObject[key] = function (...args) {
+        if (!!args[0] && args[0].detail) {
+          // 小程序调用
+          let e = args[0]
+          let detail = {}
+          detail = e.detail.hasOwnProperty('value') ? e.detail.value : e.detail 
+          action.call(this, e.currentTarget.dataset || {}, detail)
+        } else {
+          // 自己调用
+          action.call(this, args)
         }
-        action.call(this, e.currentTarget.dataset || {}, detail)
       }
     })
   
