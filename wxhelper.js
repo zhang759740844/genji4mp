@@ -120,7 +120,9 @@ class BaseService {
     let pages = getCurrentPages()
     let prevPage = pages[pages.length - delta - 1]
     if (prevPage.hasOwnProperty('onNavigateBack')) {
-      prevPage.onNavigateBack(data)
+      setTimeout(() => {
+        prevPage.onNavigateBack(data)
+      }, 500)
     }
     return new Promise((res, rej) => {
       wx.navigateBack({
