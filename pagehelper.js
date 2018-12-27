@@ -35,7 +35,7 @@ class BasePage {
           hasMethod = true
           lifeCycleObject[key] = function (...param) {
             if (param[0].param) {
-              param[0] = JSON.parse(param[0].param)
+              param[0] = JSON.parse(decodeURIComponent(param[0].param))
             }
             element.apply(this, param)
             lifeCycle[key].apply(this, param)
@@ -73,7 +73,6 @@ class BasePage {
   
     Page(pageObject)
   }
-
 }
 
 export default new BasePage()
