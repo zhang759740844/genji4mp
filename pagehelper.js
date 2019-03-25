@@ -23,8 +23,8 @@ class BasePage {
    * @param {object} privateMethod 私有方法对象
    * @param {object} viewAction UI点击事件对象
    */
-  register (props = {}, data = {}, lifeCycle = {}, privateMethod = {}, viewAction = {}) {
-    isObject('props', props) && isObject('data', data) && isObject('lifeCycle', lifeCycle) && isObject('privateMethod', privateMethod) && isObject('viewAction', viewAction)
+  register (props = {}, data = {}, lifeCycle = {}, privateMethod = {}, viewAction = {}, computed = {}, watch = {}) {
+    isObject('props', props) && isObject('data', data) && isObject('lifeCycle', lifeCycle) && isObject('privateMethod', privateMethod) && isObject('viewAction', viewAction) && isObject('computed', computed) && isObject('watch', watch)
   
     let lifeCycleObject = {}
     !!lifeCycle && Object.keys(lifeCycle).forEach(key => {
@@ -46,6 +46,38 @@ class BasePage {
         lifeCycleObject[key] = lifeCycle[key]
       }
     })
+
+    let onLoad = lifeCycleObject['onLoad'] 
+    if (onLoad) {
+      const originalOnLoad = onLoad
+      onLoad = function (...onLoadParam) {
+        // 初始化计算属性
+        for (const key in computed) {
+          if (computed.hasOwnProperty(key)) {
+            const element = computed[key];
+            const result = element.apply(this, [this.data])
+            this.setData({ [key]: result })
+          }
+        }
+
+        const originalSetData = this.setData
+        // 替换原来的 setData
+        this.setData = function (...param) {
+          for (const key in computed) {
+            if (computed.hasOwnProperty(key)) {
+              const element = computed[key];
+              const result = element.apply(this, [Object.assign({}, this.data, param[0])])
+              console.log(param)
+              originalSetData.apply(this, [Object.assign(param[0], {[key]: result}), param[1] || function(){}])
+            }
+          }
+        }
+        originalOnLoad.apply(this, onLoadParam)
+      }
+      lifeCycleObject['onLoad'] = onLoad
+    }
+
+
   
     let privateMethodObject = {}
     !!privateMethod && Object.keys(privateMethod).forEach(function (key) {
