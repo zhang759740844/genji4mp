@@ -47,35 +47,49 @@ class BasePage {
       }
     })
 
-    let onLoad = lifeCycleObject['onLoad'] 
-    if (onLoad) {
-      const originalOnLoad = onLoad
-      onLoad = function (...onLoadParam) {
-        // 初始化计算属性
-        for (const key in computed) {
-          if (computed.hasOwnProperty(key)) {
-            const element = computed[key];
-            const result = element.apply(this, [this.data])
-            this.setData({ [key]: result })
+    const originalOnLoad = lifeCycleObject['onLoad'] || function () {}
+    const onLoad = function (...onLoadParam) {
+
+      // 初始化计算属性
+      for (const key in computed) {
+        if (computed.hasOwnProperty(key)) {
+          const element = computed[key]
+          const result = element.apply(this, [this.data])
+          this.setData({ [key]: result })
+        }
+      }
+
+      // 初始化watch属性
+      const watchMap = new Map()
+      for (const key in watch) {
+        watchMap.set(key, watch[key])
+      }
+
+
+      // 替换原来的 setData
+      const originalSetData = this.setData
+      this.setData = function (...param) {
+        // setData 的时候设置 watch 属性
+        for (const key in param[0]) {
+          const element = param[0][key];
+          if (watchMap.has(key)) {
+            watchMap.get(key).apply(this, [element, this.data[key]])
           }
         }
 
-        const originalSetData = this.setData
-        // 替换原来的 setData
-        this.setData = function (...param) {
-          for (const key in computed) {
-            if (computed.hasOwnProperty(key)) {
-              const element = computed[key];
-              const result = element.apply(this, [Object.assign({}, this.data, param[0])])
-              console.log(param)
-              originalSetData.apply(this, [Object.assign(param[0], {[key]: result}), param[1] || function(){}])
-            }
+        for (const key in computed) {
+          if (computed.hasOwnProperty(key)) {
+            const element = computed[key]
+            const result = element.apply(this, [Object.assign({}, this.data, param[0])])
+            originalSetData.apply(this, [Object.assign(param[0], {[key]: result}), param[1] || function(){}])
           }
         }
-        originalOnLoad.apply(this, onLoadParam)
       }
-      lifeCycleObject['onLoad'] = onLoad
+      originalOnLoad.apply(this, onLoadParam)
     }
+    lifeCycleObject['onLoad'] = onLoad
+
+
 
 
   
