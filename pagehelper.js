@@ -56,14 +56,18 @@ class BasePage {
     !!actionsObject && Object.keys(viewAction).forEach(function (key) {
       let action = viewAction[key]
       actionsObject[key] = function (...args) {
-        if (!!args[0] && args[0].detail) {
+        if (!!args[0] && typeof (args[0].detail) !== 'undefined' ) {
           // 小程序调用
           let e = args[0]
           let detail = {}
-          detail = e.detail.hasOwnProperty('value') ? e.detail.value : e.detail 
+          detail = e.detail.hasOwnProperty('value') ? e.detail.value : e.detail
+          if (!!e.detail.formId) {
+            detail.formId = e.detail.formId
+          }
           action.call(this, e.currentTarget.dataset || {}, detail)
         } else {
           // 自己调用
+          console.warn('zachary 抛出，不应把非 action 方法放在 aciton 区域')
           action.call(this, args)
         }
       }
