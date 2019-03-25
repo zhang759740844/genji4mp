@@ -209,7 +209,32 @@ const viewAction = {
 
 #### 9. 实现小程序中的 computed 和 watch
 
-To be continued...
+小程序并不提供计算属性和属性监听器。这对开发的影响就是增加了很多的胶水代码与中间状态量。
+
+因此提供了 computed 和 watch 两种改变数据的方式，使用方式和 vue 一致：
+
+```js
+const data = {
+  someOtherData: 20
+}
+const computed = {
+  someData (data) {
+    return data.someOtherData + 1
+  }
+}
+
+const watch = {
+  someOtherData (newValue, oldValue) {
+    console.log('监听器正在工作')
+    console.log('newValue:' + newValue)
+    console.log('oldValue:' + oldValue)
+  }
+}
+
+$Page.register(props, data, lifeCycle, privateMethods, viewAction, computed, watch)
+```
+
+
 
 #### 10. 小程序的几种授权场景
 
