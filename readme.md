@@ -234,7 +234,7 @@ const watch = {
 $Page.register(props, data, lifeCycle, privateMethods, viewAction, computed, watch)
 ```
 
-
+> 本质上就是在 onLoad 方法中替换了当前页面的 setData 方法
 
 #### 10. 小程序的几种授权场景
 
