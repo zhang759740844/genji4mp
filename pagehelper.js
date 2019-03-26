@@ -22,6 +22,7 @@ class BasePage {
    * @param {object} lifeCycle 生命周期对象
    * @param {object} privateMethod 私有方法对象
    * @param {object} viewAction UI点击事件对象
+   * 
    */
   register (props = {}, data = {}, lifeCycle = {}, privateMethod = {}, viewAction = {}, computed = {}, watch = {}) {
     isObject('props', props) && isObject('data', data) && isObject('lifeCycle', lifeCycle) && isObject('privateMethod', privateMethod) && isObject('viewAction', viewAction) && isObject('computed', computed) && isObject('watch', watch)
@@ -69,6 +70,9 @@ class BasePage {
       // 替换原来的 setData
       const originalSetData = this.setData
       this.setData = function (...param) {
+        // 调用原始 setData
+        originalSetData.apply(this, param) 
+
         // setData 的时候设置 watch 属性
         for (const key in param[0]) {
           const element = param[0][key];
@@ -77,13 +81,15 @@ class BasePage {
           }
         }
 
+        // setData 的时候设置 computed 属性
         for (const key in computed) {
           if (computed.hasOwnProperty(key)) {
             const element = computed[key]
             const result = element.apply(this, [Object.assign({}, this.data, param[0])])
-            originalSetData.apply(this, [Object.assign(param[0], {[key]: result}), param[1] || function(){}])
+            originalSetData.apply(this, [{[key]: result}])
           }
         }
+       
       }
       originalOnLoad.apply(this, onLoadParam)
     }
