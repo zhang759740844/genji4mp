@@ -119,7 +119,7 @@ class BasePage {
           action.call(this, e.currentTarget.dataset || {}, detail)
         } else {
           // 自己调用
-          console.warn('zachary 抛出，不应把非 action 方法放在 aciton 区域')
+          console.warn(`zachary 抛出，不应把非 action 方法 ${action.name} 放在 action 区域`)
           action.call(this, args)
         }
       }
