@@ -97,7 +97,7 @@ class BaseService {
     })
   }
 
-  navigateBack (delta=1, data = {}, hintString) {
+  navigateBack (delta=1, data = {}, hintString, icon) {
     let param = {}
     if (typeof(delta) === 'object') {
       // 原始小程序的返回
@@ -112,7 +112,7 @@ class BaseService {
         setTimeout(() => {
           wx.showToast({
             title: hintString,
-            icon: 'none',
+            icon: !!icon ? icon : 'none',
           }) 
         }, 1000)
       }

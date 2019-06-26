@@ -91,18 +91,17 @@ class BasePage {
         }
        
       }
+      // 方便使用 setState 调用
+      this.setState = this.setData
       originalOnLoad.apply(this, onLoadParam)
     }
     lifeCycleObject['onLoad'] = onLoad
-
-
-
-
   
     let privateMethodObject = {}
     !!privateMethod && Object.keys(privateMethod).forEach(function (key) {
       privateMethodObject[key] = privateMethod[key]
     })
+    privateMethodObject['refreshPage'] = function () {this.setData({refreshPage: !this.data.refreshPage})}
   
     let actionsObject = {}
     !!actionsObject && Object.keys(viewAction).forEach(function (key) {
