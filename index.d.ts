@@ -7,6 +7,8 @@ declare class BasePage {
 
 declare class BaseService {
   constructor ()
+  router: object
+  app: any
   registerEvent (eventName: string, callback: (data: any) => void): void
   resignEvent (eventName: string): void
   executeEvent (eventName: string, data: any): void
