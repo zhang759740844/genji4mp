@@ -29,6 +29,7 @@ class BasePage {
     let lifeCycleObject = {}
     !!lifeCycle && Object.keys(lifeCycle).forEach(key => {
       let hasMethod = false
+      // 如果注册过 mixin 那么先执行 mixin 再执行原始方法
       for (const mixKey in this._mixins) {
         const element = this._mixins[mixKey]
         if (key === mixKey) {
@@ -42,8 +43,14 @@ class BasePage {
           }
         }
       }
+      // 没有 mixin 的时候，如果有 param 需要先 decode
       if (!hasMethod) {
-        lifeCycleObject[key] = lifeCycle[key]
+        lifeCycleObject[key] = function (...param) {
+          if (param[0].param) {
+            param[0] = JSON.parse(decodeURIComponent(param[0].param))
+          }
+          lifeCycle[key].apply(this, param)
+        }
       }
     })
 
