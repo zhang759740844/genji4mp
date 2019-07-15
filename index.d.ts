@@ -1,15 +1,15 @@
 declare interface LifeCycle {
-  onLoad: (param: object) => void
-  onReady: () => void
-  onShow: () => void
-  onHide: () => void
-  onUnload: () => void
-  onPullDownRefresh: () => void
-  onReachBottom: () => void
-  onShareAppMessage: () => void
-  onPageScroll: () => void
-  onTabItemTap: (item: any) => void
-  onNavigateBack: (param: object) => void
+  onLoad?: (param?: object) => void
+  onReady?: () => void
+  onShow?: () => void
+  onHide?: () => void
+  onUnload?: () => void
+  onPullDownRefresh?: () => void
+  onReachBottom?: () => void
+  onShareAppMessage?: () => void
+  onPageScroll?: () => void
+  onTabItemTap?: (item?: any) => void
+  onNavigateBack?: (param?: object) => void
 }
 
 declare class BasePage {
