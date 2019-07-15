@@ -1,22 +1,36 @@
+declare interface LifeCycle {
+  onLoad: (param: object) => void
+  onReady: () => void
+  onShow: () => void
+  onHide: () => void
+  onUnload: () => void
+  onPullDownRefresh: () => void
+  onReachBottom: () => void
+  onShareAppMessage: () => void
+  onPageScroll: () => void
+  onTabItemTap: (item: any) => void
+  onNavigateBack: (param: object) => void
+}
+
 declare class BasePage {
   constructor ()
-  mixinLifeCycle (funcObjc: any): any
-  mixinAction (funcObjc: any): any
-  register (props: any, data: any, lifeCycle: any, privateMethod: any, viewAction: any, computed?: any, watch?: any): any
+  mixinLifeCycle (funcObjc: object): void
+  mixinAction (funcObjc: object): void
+  register (props?: object, data?: object, lifeCycle?: object, privateMethod?: object, viewAction?: object, computed?: object, watch?: object): object
 }
 
 declare class BaseService {
   constructor ()
   router: object
   app: any
-  registerEvent (eventName: string, callback: (data: any) => void): void
+  registerEvent (eventName: string, callback: (data: object) => void): void
   resignEvent (eventName: string): void
-  executeEvent (eventName: string, data: any): void
-  reLaunch (baseUrl: string, params: any): void
-  navigateTo (baseUrl: string, params: any): void
-  redirectTo (baseUrl: string, params: any): void
+  executeEvent (eventName: string, data: object): void
+  reLaunch (baseUrl: string, params: object): void
+  navigateTo (baseUrl: string, params: object): void
+  redirectTo (baseUrl: string, params: object): void
   switchTab (baseUrl: string): void
-  navigateBack (delta?: number, data?: any, hintString?: string, icon?: string): void
+  navigateBack (delta?: number, data?: object, hintString?: string, icon?: string): void
   registerRouter(routers: Array<string>, moduleName?: string): void
 }
 
