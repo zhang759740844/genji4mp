@@ -8,39 +8,37 @@
  * @param {Object} [data = {}]  微信API需要提供的字段
  * @returns 返回一个执行结果的 Promise
  */
-export default function authorizeWXAPI(funcName, info = '我们需要您的授权', authorizeLevel = 0, data = {}) {
-    return new Promise((resolve, reject) => {
-      // 调用相关 api，如定位
-      wx[funcName]({
-        ...data,
-        success: resolve,
-        fail: res => {
-          if (authorizeLevel === 0) {
-            // 最弱授权，执行失败回调
-            reject(res);
-          }
-          else {
-            wx.showModal({
-              title: '请授权',
-              content: info,
-              showCancel: false,
-              success: res => {
-                wx.openSetting({
-                  success: res => {
-                    if (authorizeLevel === 2) {
-                      // 强授权，继续调用自己
-                      authorizeWXAPI(funcName, info, 2, data).then(resolve).catch(reject);
-                    }
-                    else {
-                      // 弱授权变为最弱授权
-                      authorizeWXAPI(funcName, info, 0, data).then(resolve).catch(reject);
-                    }
-                  },
-                });
-              }
-            });
-          }
+export default function authorizeWXAPI (funcName, info = '我们需要您的授权', authorizeLevel = 0, data = {}) {
+  return new Promise((resolve, reject) => {
+    // 调用相关 api，如定位
+    wx[funcName]({
+      ...data,
+      success: resolve,
+      fail: res => {
+        if (authorizeLevel === 0) {
+          // 最弱授权，执行失败回调
+          reject(res)
+        } else {
+          wx.showModal({
+            title: '请授权',
+            content: info,
+            showCancel: false,
+            success: res => {
+              wx.openSetting({
+                success: res => {
+                  if (authorizeLevel === 2) {
+                    // 强授权，继续调用自己
+                    authorizeWXAPI(funcName, info, 2, data).then(resolve).catch(reject)
+                  } else {
+                    // 弱授权变为最弱授权
+                    authorizeWXAPI(funcName, info, 0, data).then(resolve).catch(reject)
+                  }
+                }
+              })
+            }
+          })
         }
-      });
-    });
-  }
+      }
+    })
+  })
+}

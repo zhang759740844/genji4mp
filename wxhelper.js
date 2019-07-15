@@ -1,4 +1,4 @@
-function _getUrl (baseUrl, params={}) {
+function _getUrl (baseUrl, params = {}) {
   let url = baseUrl + '?param=' + encodeURIComponent(JSON.stringify(params))
   return url
 }
@@ -36,7 +36,7 @@ class BaseService {
     }
     let callbackMap = globalCallback.get(eventName)
     let pages = getCurrentPages()
-    const url = pages[pages.length - 1] 
+    const url = pages[pages.length - 1]
     callbackMap.delete(url)
   }
 
@@ -49,7 +49,6 @@ class BaseService {
       callback(data)
     })
   }
-
 
   reLaunch (baseUrl, params) {
     return new Promise((res, rej) => {
@@ -78,7 +77,7 @@ class BaseService {
         success: res,
         fail: rej
       })
-    }) 
+    })
   }
 
   switchTab (baseUrl) {
@@ -88,32 +87,32 @@ class BaseService {
         success: res,
         fail: rej
       })
-    })  
+    })
   }
 
-  switchTabTo (baseUrl, nextUrl, params={}) {
+  switchTabTo (baseUrl, nextUrl, params = {}) {
     return this.switchTab(baseUrl).then(() => {
       this.navigateTo(nextUrl, params)
     })
   }
 
-  navigateBack (delta=1, data = {}, hintString, icon) {
+  navigateBack (delta = 1, data = {}, hintString, icon) {
     let param = {}
-    if (typeof(delta) === 'object') {
+    if (typeof (delta) === 'object') {
       // 原始小程序的返回
       param = delta
-    } else if (JSON.stringify(data) === "{}" && !hintString) {
+    } else if (JSON.stringify(data) === '{}' && !hintString) {
       // 只设置了返回级数的返回
-      param = {delta}
+      param = { delta }
     } else {
-      param = {delta}
+      param = { delta }
       // 设置之前的数据
-      if (!!hintString) {
+      if (hintString) {
         setTimeout(() => {
           wx.showToast({
             title: hintString,
-            icon: !!icon ? icon : 'none',
-          }) 
+            icon: icon || 'none'
+          })
         }, 1000)
       }
     }
@@ -123,7 +122,7 @@ class BaseService {
       let preFunc = function () {
         if (prevPage.hasOwnProperty('onNavigateBack')) {
           prevPage.onNavigateBack(data)
-        } 
+        }
         res(prevPage)
       }
       wx.navigateBack({
@@ -164,5 +163,5 @@ export default new Proxy($wx, {
     } else {
       throw new Error('zachary 抛出：' + property + '不存在')
     }
-  }  
+  }
 })
