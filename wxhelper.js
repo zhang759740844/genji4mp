@@ -133,11 +133,15 @@ class BaseService {
     })
   }
 
-  registerRouter (routers) {
+  registerRouter (routers, moduleName) {
     for (const key in routers) {
       if (routers.hasOwnProperty(key)) {
-        const element = routers[key];
-        this.router[key] = `/pages/${element}/${element}`
+        const element = routers[key]
+        if (module) {
+          this.router[key] = `/pages/${moduleName}/${element}/${element}`
+        } else {
+          this.router[key] = `/pages/${element}/${element}`
+        }
       }
     }
   }
