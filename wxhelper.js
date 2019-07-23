@@ -51,41 +51,41 @@ class BaseService {
   }
 
   reLaunch (baseUrl, params) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       wx.reLaunch({
         url: _getUrl(baseUrl, params),
-        success: res,
-        fail: rej
+        success: resolve,
+        fail: reject
       })
     })
   }
 
   navigateTo (baseUrl, params) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       wx.navigateTo({
         url: _getUrl(baseUrl, params),
-        success: res,
-        fail: rej
+        success: resolve,
+        fail: reject
       })
     })
   }
 
   redirectTo (baseUrl, params) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       wx.redirectTo({
         url: _getUrl(baseUrl, params),
-        success: res,
-        fail: rej
+        success: resolve,
+        fail: reject
       })
     })
   }
 
   switchTab (baseUrl) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       wx.switchTab({
         url: baseUrl,
-        success: res,
-        fail: rej
+        success: resolve,
+        fail: reject
       })
     })
   }
@@ -118,17 +118,17 @@ class BaseService {
     }
     let pages = getCurrentPages()
     let prevPage = pages[pages.length - delta - 1]
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       let preFunc = function () {
         if (prevPage.hasOwnProperty('onNavigateBack')) {
           prevPage.onNavigateBack(data)
         }
-        res(prevPage)
+        resolve(prevPage)
       }
       wx.navigateBack({
         ...param,
         success: preFunc,
-        fail: rej
+        fail: reject
       })
     })
   }
@@ -137,7 +137,7 @@ class BaseService {
     for (const key in routers) {
       if (routers.hasOwnProperty(key)) {
         const element = routers[key]
-        if (module) {
+        if (moduleName) {
           this.router[key] = `/pages/${moduleName}/${element}/${element}`
         } else {
           this.router[key] = `/pages/${element}/${element}`
