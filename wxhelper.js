@@ -9,6 +9,10 @@ class BaseService {
     this.app = null
   }
 
+  getRouter () {
+    return this.router
+  }
+
   registerEvent (eventName, callback) {
     let globalCallback = getApp().globalEventCallback
     if (!globalCallback) {

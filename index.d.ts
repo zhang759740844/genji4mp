@@ -1,7 +1,4 @@
-declare interface BaseRouter {}
-declare interface BaseParam {
-
-}
+declare type BaseParam = Record<string, any>
 
 declare interface PageInstance {
   props?: any,
@@ -36,6 +33,7 @@ declare namespace Genji4mp {
   class BaseService {
     constructor ()
     router: BaseRouter
+    getRouter: (routerName: string) => string
     registerEvent (eventName: string, callback: (data: any) => void): void
     resignEvent (eventName: string): void
     executeEvent (eventName: string, data: any): void
@@ -44,7 +42,7 @@ declare namespace Genji4mp {
     redirectTo (baseUrl: string, params: BaseParam): void
     switchTab (baseUrl: string): void
     navigateBack (delta?: number, data?: BaseParam, hintString?: string, icon?: string): void
-    registerRouter(router: BaseRouter, moduleName?: string): void
+    registerRouter(router: object, moduleName?: string): void
   }
 }
 
