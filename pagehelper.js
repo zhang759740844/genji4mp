@@ -35,7 +35,7 @@ class BasePage {
         if (key === mixKey) {
           hasMethod = true
           lifeCycleObject[key] = function (...param) {
-            if (param[0].param) {
+            if (key === 'onLoad' && param[0].param) {
               param[0] = JSON.parse(decodeURIComponent(param[0].param))
             }
             element.apply(this, param)
@@ -46,7 +46,7 @@ class BasePage {
       // 没有 mixin 的时候，如果有 param 需要先 decode
       if (!hasMethod) {
         lifeCycleObject[key] = function (...param) {
-          if (param[0].param) {
+          if (key === 'onLoad' && param[0].param) {
             param[0] = JSON.parse(decodeURIComponent(param[0].param))
           }
           lifeCycle[key].apply(this, param)
