@@ -32,7 +32,7 @@ declare namespace Genji4mp {
 
   class BaseService {
     constructor ()
-    router: BaseRouter
+    router: any
     getRouter: (routerName: string) => string
     registerEvent (eventName: string, callback: (data: any) => void): void
     resignEvent (eventName: string): void
@@ -41,7 +41,7 @@ declare namespace Genji4mp {
     navigateTo (baseUrl: string, params: BaseParam): void
     redirectTo (baseUrl: string, params: BaseParam): void
     switchTab (baseUrl: string): void
-    navigateBack (delta?: number, data?: BaseParam, hintString?: string, icon?: string): void
+    navigateBack (delta?: number | object, data?: BaseParam | string, hintString?: string, icon?: string): void
     registerRouter(router: object, moduleName?: string): void
   }
 }

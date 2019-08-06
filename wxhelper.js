@@ -101,42 +101,40 @@ class BaseService {
   }
 
   navigateBack (delta = 1, data = {}, hintString, icon) {
-    let param = {}
     if (typeof (delta) === 'object') {
-      // 原始小程序的返回
-      param = delta
-    } else if (JSON.stringify(data) === '{}' && !hintString) {
-      // 只设置了返回级数的返回
-      param = { delta }
-    } else {
-      param = { delta }
-      // 设置之前的数据
-      if (hintString) {
-        setTimeout(() => {
-          wx.showToast({
-            title: hintString,
-            icon: icon || 'none'
-          })
-        }, 1000)
-      }
+      // 不传 delta 的情况
+      icon = hintString
+      hintString = data
+      data = delta
+      delta = 1
+    }
+    if (hintString) {
+      setTimeout(() => {
+        wx.showToast({
+          title: hintString,
+          icon: icon || 'none'
+        })
+      }, 1000)
     }
     let pages = getCurrentPages()
     let prevPage = pages[pages.length - delta - 1]
     return new Promise((resolve, reject) => {
       let preFunc = function () {
-        if (prevPage.hasOwnProperty('onNavigateBack')) {
+        if (prevPage && prevPage.hasOwnProperty('onNavigateBack')) {
           prevPage.onNavigateBack(data)
         }
         resolve(prevPage)
       }
       wx.navigateBack({
-        ...param,
+        delta,
         success: preFunc,
         fail: reject
       })
     })
   }
 
+  // 暂不支持不同模块具有相同的路由名
+  // 如果使用 ts， 由于有代码提示，因此建议直接生成路由项，不建议以此方式注册
   registerRouter (routers, moduleName) {
     for (const key in routers) {
       if (routers.hasOwnProperty(key)) {
